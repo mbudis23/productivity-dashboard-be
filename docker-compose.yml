@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  productivity-dashboard-be:
+    build:
+      context: .
+    container_name: productivity-dashboard-be
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - productivity-dashboard-network
+
+  mongodb:
+    image: mongo:8.0.4
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - productivity-dashboard-network
+
+volumes:
+  mongodb_data:
+networks:
+  productivity-dashboard-network:
